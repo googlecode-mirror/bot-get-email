@@ -24,10 +24,17 @@ $C->action = '';
 
 // ### INCLUDE ###
 require_once('database.class.php');
+require_once('functions.php');
 require_once('simple_html_dom.php');
 require_once('config.php');
 require_once('bot.php');
 
 // ### DATABASE ###
 $C->db = new sql_db( $C->database );
+
+// ### CHECK INSTALL ###
+if( !yplitgroup_check_install() )
+{
+	yplitgroup_redirect_install();
+}
 
