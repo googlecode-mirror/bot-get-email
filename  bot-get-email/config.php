@@ -1,1 +1,1 @@
-<?php/*** Auto Get Email* Yplitgroup* 20/2/2012*/$C->database['dbhost'] = 'localhost';$C->database['dbname'] = 'auto_get_mail';$C->database['dbuname'] = 'root';$C->database['dbpass'] = '';
+<?php/*** Auto Get Email* Yplitgroup* 20/2/2012*/$C->database['dbhost'] = 'localhost';$C->database['dbname'] = 'auto_get_mail';$C->database['dbuname'] = 'root';$C->database['dbpass'] = '';// Option $C->constant->last_run_file = 'last_run.txt';$C->constant->list_file_default = 'list_Email.txt';
