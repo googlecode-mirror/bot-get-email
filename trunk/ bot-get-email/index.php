@@ -49,7 +49,7 @@ if( count( $C->db->error ) )
 $C->action = ( !empty( $_GET['action'] ) ) ? $_GET['action'] : 'none';
 
 // ### CHECK AUTO RUN ###
-if( !isset( $_GET['auto'] ) )
+if( isset( $_GET['auto'] ) )
 {
 	$C->is_crontjob = true;
 }
@@ -86,3 +86,8 @@ if( !isset( $_GET['auto'] ) )
 			}
 		}
 
+// ### IS CRONT JOB ###
+if( $C->is_crontjob )
+{
+	yplitgroup_crontjob();
+}
