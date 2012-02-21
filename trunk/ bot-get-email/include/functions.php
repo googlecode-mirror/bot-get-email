@@ -54,7 +54,7 @@ function yplitgroup_bot_get_url( $url )
 	$this_host = $this_host['scheme'] . '://' . $this_host['host'] . '/';
 	foreach( $html->find('a') as $a )
 	{
-		if( !empty( $a->href ) and !preg_match('/^#/', $a->href) )
+		if( !empty( $a->href ) and !preg_match('/^#/', $a->href) and !preg_match('/^javascript:/', $a->href) )
 		{
 			if( !preg_match( '/^http:\/\//is', $a->href ) )
 			{
