@@ -21,6 +21,7 @@
 $C = new stdClass;
 $C->database = array();
 $C->action = '';
+$C->is_crontjob = false;
 
 // ### INCLUDE ###
 require_once('include/database.class.php');
@@ -46,6 +47,12 @@ if( count( $C->db->error ) )
 
 // ### GET QUERY THOUGHT GET METHOD ###
 $C->action = ( !empty( $_GET['action'] ) ) ? $_GET['action'] : 'none';
+
+// ### CHECK AUTO RUN ###
+if( !isset( $_GET['auto'] ) )
+{
+	$C->is_crontjob = true;
+}
 
 // ### DO REQUEST ###
 	// ### HELP CONSOLE ###
@@ -75,7 +82,7 @@ $C->action = ( !empty( $_GET['action'] ) ) ? $_GET['action'] : 'none';
 			}
 			else
 			{
-			echo '4';
+				yplitgroup_view_main();
 			}
 		}
 
