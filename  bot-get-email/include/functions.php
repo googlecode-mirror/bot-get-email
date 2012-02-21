@@ -62,10 +62,17 @@ function yplitgroup_bot_get_url( $url )
 			}
 			$q = "SELECT 1 FROM `yplitgroup_global_url` WHERE `url` = " . $C->db->dbescape_string( $a->href );
 			$C->db->sql_query( $q );
-			if( $C->db->sql_numrows() == 0 ) // Chua ton tai url nay
-			{ 
-				$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
+			if( $C->db->sql_numrows() == 0 ) // Check 1
+			{
+				$real_url = parse_url( $a->href );
+				$real_url = $real_url['scheme'] . '://' . $real_url['host'] . ( isset( $real_url['path'] ) ? $real_url['path'] : '' ) . ( isset( $real_url['query'] ) ? '?'.$real_url['query'] : '' );
+				$q = "SELECT 1 FROM `yplitgroup_global_url` WHERE `url` = " . $C->db->dbescape_string( $real_url );
 				$C->db->sql_query( $q );
+				if( $C->db->sql_numrows() == 0 ) // Check 2
+				{
+					$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
+					$C->db->sql_query( $q );
+				}
 			}
 		}
 	}
