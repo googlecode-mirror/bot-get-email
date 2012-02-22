@@ -27,7 +27,11 @@ function yplitgroup_crontjob()
 		yplitgroup_update_time( );
 	}
 	echo "<hr>";
-		echo "[ $result[Id] ] Url: $result[Url] ($result[Time])";
+	echo "[ $result[Id] ] Url: $result[Url] ($result[Time])";
+	if( $C->constant->auto )
+	{
+		echo "<meta http-equiv='refresh' content='1'>";
+	}
 }
 
 // BOT: Disable url
@@ -76,13 +80,12 @@ function yplitgroup_bot_get_url( $url )
 				$C->db->sql_query( $q );
 				if( $C->db->sql_numrows() == 0 ) // Check 2
 				{
-					require_once( DIR . '/include/checkurl.class.php' );
-					$check = new CheckUrl ();
-					if( $check->check_curl( $a->href ) ) // Check 3
+					if( $C->constant->auto == 1 )
 					{
+						echo $a->href . '<br>';
+					}
 						$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
 						$C->db->sql_query( $q );
-					}
 				}
 			}
 		}
@@ -95,16 +98,20 @@ function yplitgroup_get_email( $url )
 	global $C;
 	if( empty( $url ) ) return false;
 	$html = file_get_html( $url );
-	$text = $html->plaintext;
 	$email_preg = '/(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!\.)){0,61}[a-zA-Z0-9_-]?\.)+[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!$)){0,61}[a-zA-Z0-9_]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))/'; // Power by Nukeviet :)
-	preg_match_all( $email_preg, $text, $email );
-	$email = $email[0];
+	preg_match_all( $email_preg, $html, $email );
+	$email = $email[0]; 
+	if( count( $email ) < 1 ) return false;
 	foreach( $email as $_email )
-	{ //die($_email);
+	{
 		$q = "SELECT 1 FROM `yplitgroup_email` WHERE `email` = " . $C->db->dbescape_string( $_email );
 		$C->db->sql_query( $q );
-		if( $C->db->sql_numrows() == 0 ) // Chua ton tai url nay
+		if( $C->db->sql_numrows() == 0 ) // Chua ton tai email nay
 		{
+			if( $C->constant->auto == 1 )
+			{
+			echo '&nbsp; &nbsp;'. $_email . '<br>';
+			}
 			$q = "INSERT INTO `yplitgroup_email`(`email`) VALUE( " . $C->db->dbescape_string( $_email ) . ") ";
 			$C->db->sql_query( $q );
 		}
