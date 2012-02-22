@@ -38,6 +38,14 @@ function yplitgroup_crontjob()
 	}
 }
 
+// Clear all disable url
+function yplitgroup_clear_all_disable_url()
+{
+	global $C;
+	$q = "DELETE FROM `yplitgroup_global_url` WHERE `active` = 0 ";
+	return $C->db->sql_query( $q );
+}
+
 // BOT: Disable url
 function yplitgroup_disable_url( $id )
 {
