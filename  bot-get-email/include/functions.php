@@ -14,6 +14,10 @@ function yplitgroup_crontjob()
 	// Start work
 	$q = "SELECT `id`,`url` FROM `yplitgroup_global_url` WHERE `active` = 1 LIMIT " . $C->constant->link_get_limit;
 	$C->db->sql_query( $q );
+	if( $C->db->sql_numrows() == 0 )
+	{
+		die('There is nothing on my database!!!');
+	}
 	$result = array();
 	while( $re = $C->db->sql_fetch_assoc() )
 	{
@@ -151,6 +155,9 @@ function yplitgroup_view_main()
 		<a href='index.php?action=help'>index.php?action=help</a>: View help page
 	</li>
 	<li>
+		<a href='index.php?auto'>index.php?auto</a>: Start auto run
+	</li>
+	<li>
 		<a href='index.php?action=list'>index.php?action=list</a>: View list email
 		<ul>
 			<li>
@@ -254,6 +261,9 @@ function yplitgroup_view_help()
 		</li>
 		<li>
 			<a href='index.php?action=list'>index.php?action=list</a>: View list 
+		</li>
+		<li>
+			<a href='index.php?auto'>index.php?auto</a>: Start auto run
 		</li>
 	</ul>
 </body>
