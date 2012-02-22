@@ -10,7 +10,14 @@ function yplitgroup_crontjob()
 {
 	global $C;
 	if( !yplitgroup_check_time( ) ) return false;
-	
+	if( $C->constant->refresh_count != 0 )
+	{
+		if( $_SESSION['refresh_count'] >= $C->constant->refresh_count )
+		{
+			yplitgroup_show_result();
+			return;
+		}
+	}
 	// Start work
 	$q = "SELECT `id`,`url` FROM `yplitgroup_global_url` WHERE `active` = 1 LIMIT " . $C->constant->link_get_limit;
 	$C->db->sql_query( $q );
@@ -31,11 +38,35 @@ function yplitgroup_crontjob()
 		yplitgroup_update_time( );
 	}
 	echo "<hr>";
-	echo "[ $result[Id] ] Url: $result[Url] ($result[Time])";
+	echo "[ $result[Id] ] Url: $result[Url] ($result[Time]) <br>";
+	if( $C->constant->refresh_count != 0 )
+	{
+		echo "Refresh count: " . $_SESSION['refresh_count'] ;
+	}
 	if( $C->constant->auto )
 	{
 		echo "<meta http-equiv='refresh' content='1'>";
 	}
+}
+
+// Show result
+function yplitgroup_show_result()
+{
+	global $C;
+	$q = "SELECT * FROM `yplitgroup_email`";
+	$C->db->sql_query( $q );
+	if( $C->db->sql_numrows() == 0 )
+	{
+		echo "There is nothing on my database!!!";
+		die();
+	}
+	echo "<h3>BOT RESULT: </h3><br>";
+	while( $re = $C->db->sql_fetch_assoc() )
+	{
+		echo $re['email'] . '<br>';
+	}
+	echo "<hr>";
+	echo "( " . $C->db->sql_numrows() . " )";
 }
 
 // Clear all disable url
