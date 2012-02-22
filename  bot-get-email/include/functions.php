@@ -92,6 +92,7 @@ function yplitgroup_bot_get_url( $url )
 	global $C; 
 	if( empty( $url ) ) return false;
 	// Get all url
+	$url = htmlspecialchars_decode( $url );
 	$html = file_get_html( $url ); 
 	foreach( $html->find('a') as $a )
 	{
@@ -145,6 +146,7 @@ function yplitgroup_get_email( $url )
 {
 	global $C;
 	if( empty( $url ) ) return false;
+	$url = htmlspecialchars_decode( $url );
 	$html = file_get_html( $url );
 	$email_preg = '/(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!\.)){0,61}[a-zA-Z0-9_-]?\.)+[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!$)){0,61}[a-zA-Z0-9_]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))/'; // Power by Nukeviet :)
 	preg_match_all( $email_preg, $html, $email );
