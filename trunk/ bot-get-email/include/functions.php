@@ -47,14 +47,14 @@ function yplitgroup_bot_get_url( $url )
 	// Get all url
 	$html = file_get_html( $url ); 
 	$this_host = parse_url( $url );
-	$this_host = $this_host['scheme'] . '://' . $this_host['host'] . '/';
+	$this_host = $this_host['scheme'] . '://' . $this_host['host'] ;
 	foreach( $html->find('a') as $a )
 	{
 		if( !empty( $a->href ) and !preg_match('/^#/', $a->href) and !preg_match('/^javascript:/', $a->href) )
 		{
 			if( !preg_match( '/^http:\/\//is', $a->href ) )
 			{
-				$a->href = $this_host . pathinfo( $_SERVER['PHP_SELF'], PATHINFO_DIRNAME ) . $a->href;
+				$a->href = $this_host . pathinfo( $_SERVER['PHP_SELF'], PATHINFO_DIRNAME ) . '/' . $a->href;
 			}
 			$q = "SELECT 1 FROM `yplitgroup_global_url` WHERE `url` = " . $C->db->dbescape_string( $a->href );
 			$C->db->sql_query( $q );
