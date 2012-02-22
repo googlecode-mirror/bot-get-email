@@ -124,12 +124,16 @@ function yplitgroup_bot_get_url( $url )
 				$C->db->sql_query( $q );
 				if( $C->db->sql_numrows() == 0 ) // Check 2
 				{
-					if( $C->constant->auto == 1 )
+					$this_host = parse_url( $a->href );
+					if( !in_array($this_host['host'], $C->constant->dont_get ) ) // Check 3 (Don't get)
 					{
-						echo $a->href . '<br>';
+						if( $C->constant->auto == 1 )
+						{
+							echo $a->href . '<br>';
+						}
+							$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
+							$C->db->sql_query( $q );
 					}
-						$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
-						$C->db->sql_query( $q );
 				}
 			}
 		}
