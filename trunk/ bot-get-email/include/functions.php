@@ -62,6 +62,7 @@ function yplitgroup_bot_get_url( $url )
 			{
 				$url = explode('?', $url);
 				$url = $url[0];
+				$url .= '/';
 				if( preg_match('/(\/)([A-z0-9\.]+)(\?(.*))?$/', $url, $m) )
 				{
 						if( strpos( $m[count($m)-1], '.' ) > 0 )
