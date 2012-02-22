@@ -18,20 +18,16 @@ function yplitgroup_crontjob()
 	while( $re = $C->db->sql_fetch_assoc() )
 	{
 		$t1 = time();
-		$result[]['Id'] = $re['id'];
-		$result[]['Url'] = $re['url'];
+		$result['Id'] = $re['id'];
+		$result['Url'] = $re['url'];
 		yplitgroup_get_email( $re['url'] ); 
 		yplitgroup_bot_get_url( $re['url'] ); 
 		yplitgroup_disable_url( $re['id'] );
-		$result[]['Time'] = time()-$t1;
+		$result['Time'] = time()-$t1;
+		yplitgroup_update_time( );
 	}
-	
-	yplitgroup_update_time( );
 	echo "<hr>";
-	foreach($result as $re)
-	{
-		echo "[ $re[id] ] Url: $re[Url] ($re[Time])";
-	}
+		echo "[ $result[Id] ] Url: $result[Url] ($result[Time])";
 }
 
 // BOT: Disable url
@@ -58,7 +54,7 @@ function yplitgroup_bot_get_url( $url )
 		{
 			if( !preg_match( '/^http:\/\//is', $a->href ) )
 			{
-				$a->href = $this_host . $a->href;
+				$a->href = $this_host . pathinfo( $_SERVER['PHP_SELF'], PATHINFO_DIRNAME ) . $a->href;
 			}
 			$q = "SELECT 1 FROM `yplitgroup_global_url` WHERE `url` = " . $C->db->dbescape_string( $a->href );
 			$C->db->sql_query( $q );
@@ -70,7 +66,7 @@ function yplitgroup_bot_get_url( $url )
 				$C->db->sql_query( $q );
 				if( $C->db->sql_numrows() == 0 ) // Check 2
 				{
-					$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
+					echo $q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
 					$C->db->sql_query( $q );
 				}
 			}
