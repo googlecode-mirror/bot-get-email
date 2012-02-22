@@ -23,12 +23,17 @@ $C->database = array();
 $C->action = '';
 $C->is_crontjob = false;
 
+session_start();
+
+// ### ROOT DIR ###
+define( 'DIR', pathinfo( str_replace( DIRECTORY_SEPARATOR, '/', __file__ ), PATHINFO_DIRNAME ) );
+
 // ### INCLUDE ###
-require_once('include/database.class.php');
-require_once('include/functions.php');
-require_once('include/simple_html_dom.php');
-require_once('config.php');
-require_once('bot.php');
+require_once( DIR . '/include/database.class.php');
+require_once( DIR . '/include/functions.php');
+require_once( DIR . '/include/simple_html_dom.php');
+require_once( DIR . '/config.php');
+require_once( DIR . '/bot.php');
 
 // ### DATABASE ###
 $C->db = new sql_db( $C->database );
@@ -89,5 +94,17 @@ if( isset( $_GET['auto'] ) )
 // ### IS CRONT JOB ###
 if( $C->is_crontjob )
 {
+	if( $C->constant->refresh_count != 0 )
+	{
+		if( !isset( $_SESSION['refresh_count'] ) )
+		{
+			$_SESSION['refresh_count'] = 1;
+		}
+		else
+		{
+			$_SESSION['refresh_count']++;
+		}
+	}
+	ini_set('max_execution_time', 0);
 	yplitgroup_crontjob();
 }
