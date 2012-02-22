@@ -52,8 +52,19 @@ function yplitgroup_bot_get_url( $url )
 		{
 			if( !preg_match( '/^http:\/\//is', $a->href ) )
 			{
-				$_url = parse_url( $url );
-				$a->href = $_url['scheme'] . '://' . $_url['host'] . ( !empty( $_url['path'] ) ? $_url['path'] : '' ) . '/' . $a->href;
+				$url = explode('?', $url);
+				$url = $url[0];
+				if( preg_match('/(\/)([A-z0-9\.]+)(\?(.*))?$/', $url, $m) )
+				{
+						if( strpos( $m[count($m)-1], '.' ) > 0 )
+						{
+							$url = str_replace($m[0], '', $url);
+						}
+				}
+				if ( ! empty( $url ) ) $url = str_replace( DIRECTORY_SEPARATOR, '/', $url );
+				if ( ! empty( $url ) ) $url = preg_replace( "/[\/]+$/", '', $url );
+				
+				$a->href = $url . '/' . $a->href;
 			}
 			$q = "SELECT 1 FROM `yplitgroup_global_url` WHERE `url` = " . $C->db->dbescape_string( $a->href );
 			$C->db->sql_query( $q );
