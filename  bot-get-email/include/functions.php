@@ -76,9 +76,13 @@ function yplitgroup_bot_get_url( $url )
 				$C->db->sql_query( $q );
 				if( $C->db->sql_numrows() == 0 ) // Check 2
 				{
-					echo $q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
-					echo "<br>";
-					$C->db->sql_query( $q );
+					require_once( DIR . '/include/checkurl.class.php' );
+					$check = new CheckUrl ();
+					if( $check->check_curl( $a->href ) ) // Check 3
+					{
+						$q = "INSERT INTO `yplitgroup_global_url`(`url`, `active`) VALUE( " . $C->db->dbescape_string( $a->href ) . ", 1 ) ";
+						$C->db->sql_query( $q );
+					}
 				}
 			}
 		}
